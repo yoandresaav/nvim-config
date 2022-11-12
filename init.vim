@@ -28,7 +28,7 @@ set ttyfast
 set noswapfile
 
 call plug#begin("~/.config/nvim/plugged")
-Plug 'dracula/vim'
+
 Plug 'ryanoasis/vim-devicons'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -40,6 +40,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Themes
+Plug 'dracula/vim'
 Plug 'overcache/NeoSolarized'
 Plug 'EdenEast/nightfox.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -52,7 +53,6 @@ Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " comments for jsx,tsx
-"Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-commentary'
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 
@@ -66,9 +66,6 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 
-" Auto pairs 
-" Plug 'jiangmiao/auto-pairs'
-"Plug 'alvan/vim-closetag'
 " Match tags
 Plug 'leafOfTree/vim-matchtag'
 
@@ -94,8 +91,6 @@ call plug#end()
 let mapleader = " "
 
 set termguicolors
-" colorscheme NeoSolarized
-"colorscheme duskfox
 colorscheme sonokai
 
 augroup reactgroup
@@ -193,11 +188,9 @@ command! -bang -nargs=* RgExact
 nmap <Leader>G :execute 'RgExact ' . expand('<cword>') <Cr>
 
 " Highlight cursor line underneath the cursor vertically.
-"set cursorcolumn
 set statusline=
 set statusline+=\ %M
 set statusline+=\ %F
-" set statusline+=\ %<%f\ %h%m%r%{kite#statusline()}%=%-14.(%l,%c%V%)\ %P
 set statusline+=\ %{FugitiveStatusline()}
 set laststatus=2
 
@@ -206,7 +199,7 @@ nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
 nmap <leader>gs :G<CR>
 
-"Config Telescope seach ignore folders
+" Config Telescope seach ignore folders
 lua << EOF
 require('telescope').setup{
   defaults = {
