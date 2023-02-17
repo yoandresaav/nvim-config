@@ -32,17 +32,22 @@ call plug#begin("~/.config/nvim/plugged")
 Plug 'ryanoasis/vim-devicons'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'scrooloose/nerdtree'
+" Plug 'scrooloose/nerdtree'
 Plug 'mhinz/vim-startify'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'fatih/vim-go'
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+Plug 'nvim-tree/nvim-tree.lua'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" Alignment
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-peekaboo'
+
 " Themes
-Plug 'dracula/vim'
 Plug 'overcache/NeoSolarized'
-Plug 'EdenEast/nightfox.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'sainnhe/sonokai'
 
@@ -85,6 +90,9 @@ Plug 'junegunn/fzf.vim'
 Plug 'Pocco81/true-zen.nvim'
 Plug 'Pocco81/auto-save.nvim'
 
+" Emojis
+Plug 'https://gitlab.com/gi1242/vim-emoji-ab.git'
+
 call plug#end()
 
 
@@ -92,6 +100,7 @@ let mapleader = " "
 
 set termguicolors
 colorscheme sonokai
+let g:go_def_mapping_enabled = 0
 
 augroup reactgroup
     autocmd!
@@ -121,10 +130,16 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+" nnoremap <leader>n :NERDTreeFocus<CR>
+" nnoremap <C-n> :NERDTree<CR>
+" nnoremap <C-t> :NERDTreeToggle<CR>
+" nnoremap <C-f> :NERDTreeFind<CR>
+
+
+nnoremap <leader>n :NvimTreeFocus<CR>
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <C-t> :NvimTreeFindFile<CR>
+nnoremap <C-f> :NvimTreeCollapse<CR>
 
 " Disable netrw.
 let g:loaded_netrw  = 1
@@ -132,6 +147,19 @@ let g:loaded_netrwPlugin = 1
 let g:loaded_netrwSettings = 1
 let g:loaded_netrwFileHandlers = 1
 
+" Disable perl
+let g:loaded_perl_provider = 0
+
+
+" Emoji completation
+au FileType javascript,javascriptreact,python runtime macros/emoji-ab.vim
+
+" Alignment
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
 
@@ -140,6 +168,33 @@ nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Config tabs
+"  Move to previous/next
+nnoremap <leader>, <Cmd>BufferPrevious<CR>
+nnoremap <leader>. <Cmd>BufferNext<CR>
+" Re-order to previous/next
+" nnoremap <silent> <leader>m <Cmd>BufferMovePrevious<CR>
+nnoremap <silent> <leader>M <Cmd>BufferMoveNext<CR>
+" Goto buffer in position...
+nmap <silent> <leader>1 <Cmd>BufferGoto 1<CR>
+nmap <silent> <leader>2 <Cmd>BufferGoto 2<CR>
+nmap <silent> <leader>3 <Cmd>BufferGoto 3<CR>
+nmap <silent> <leader>4 <Cmd>BufferGoto 4<CR>
+nmap <silent> <leader>5 <Cmd>BufferGoto 5<CR>
+nmap <silent> <leader>6 <Cmd>BufferGoto 6<CR>
+nmap <silent> <leader>7 <Cmd>BufferGoto 7<CR>
+nmap <silent> <leader>8 <Cmd>BufferGoto 8<CR>
+nmap <silent> <leader>9 <Cmd>BufferGoto 9<CR>
+nmap <silent> <leader>0 <Cmd>BufferLast<CR>
+" Sort automatically by...
+nnoremap <silent> <leader>bb <Cmd>BufferOrderByBufferNumber<CR>
+nnoremap <silent> <leader>bd <Cmd>BufferOrderByDirectory<CR>
+nnoremap <silent> <leader>bl <Cmd>BufferOrderByLanguage<CR>
+nnoremap <silent> <leader>bw <Cmd>BufferOrderByWindowNumber<CR>
+
+" Show github
+map <silent><Leader>gb <Cmd>Git blame<CR>
 
 "Config Telescope seach ignore folders
 lua << EOF
@@ -153,10 +208,6 @@ require('telescope').setup{
     }
   }}
 EOF
-
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
 
 lua << EOF
 require'nvim-treesitter.configs'.setup {
@@ -213,17 +264,6 @@ require('telescope').setup{
 EOF
 
 
-" Goto buffer in position...
-nmap <silent> <leader>1 <Cmd>BufferGoto 1<CR>
-nmap <silent> <leader>2 <Cmd>BufferGoto 2<CR>
-nmap <silent> <leader>3 <Cmd>BufferGoto 3<CR>
-nmap <silent> <leader>4 <Cmd>BufferGoto 4<CR>
-nmap <silent> <leader>5 <Cmd>BufferGoto 5<CR>
-nmap <silent> <leader>6 <Cmd>BufferGoto 6<CR>
-nmap <silent> <leader>7 <Cmd>BufferGoto 7<CR>
-nmap <silent> <leader>8 <Cmd>BufferGoto 8<CR>
-nmap <silent> <leader>9 <Cmd>BufferGoto 9<CR>
-nmap <silent> <leader>0 <Cmd>BufferLast<CR>
 
 " Lua config git decorator https://github.com/lewis6991/gitsigns.nvim
 lua << EOF
@@ -233,6 +273,21 @@ EOF
 lua << EOF
 	require("true-zen").setup {}
     require("auto-save").setup {}
+    require("nvim-tree").setup({
+      sort_by = "case_sensitive",
+      view = {
+        width = 30,
+        mappings = {
+          list = {
+            { key = "u", action = "dir_up" },
+          },
+        },
+      },
+      renderer = {
+        group_empty = true,
+      },
+      filters = {
+        dotfiles = true,
+      },
+    })
 EOF
-
-
