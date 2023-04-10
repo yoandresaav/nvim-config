@@ -30,6 +30,7 @@ set noswapfile
 call plug#begin("~/.config/nvim/plugged")
 
 Plug 'ryanoasis/vim-devicons'
+
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 " Plug 'scrooloose/nerdtree'
@@ -37,13 +38,16 @@ Plug 'mhinz/vim-startify'
 Plug 'fatih/vim-go'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'nvim-tree/nvim-tree.lua'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Alignment
 Plug 'junegunn/vim-easy-align'
+
+" Registers
 Plug 'junegunn/vim-peekaboo'
 
 " Themes
@@ -70,6 +74,7 @@ Plug 'peitalin/vim-jsx-typescript'
 " Configure TABS
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
+" Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
 
 " Match tags
 Plug 'leafOfTree/vim-matchtag'
@@ -121,6 +126,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gdv :call CocActionAsync('jumpDefinition', 'vsplit')<CR>
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -129,6 +135,10 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
+" configuring peekabo to only use @
+" let g:peekaboo_prefix = "'"
+
+
 
 " nnoremap <leader>n :NERDTreeFocus<CR>
 " nnoremap <C-n> :NERDTree<CR>
@@ -136,10 +146,10 @@ nmap <leader>f  <Plug>(coc-format-selected)
 " nnoremap <C-f> :NERDTreeFind<CR>
 
 
-nnoremap <leader>n :NvimTreeFocus<CR>
-nnoremap <C-n> :NvimTreeToggle<CR>
-nnoremap <C-t> :NvimTreeFindFile<CR>
-nnoremap <C-f> :NvimTreeCollapse<CR>
+" nnoremap <leader>n :NvimTreeFocus<CR>
+" nnoremap <C-n> :NvimTreeToggle<CR>
+" nnoremap <C-t> :NvimTreeFindFile<CR>
+" nnoremap <C-f> :NvimTreeCollapse<CR>
 
 " Disable netrw.
 let g:loaded_netrw  = 1
@@ -156,10 +166,10 @@ au FileType javascript,javascriptreact,python runtime macros/emoji-ab.vim
 
 " Alignment
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+" xmap <leader>ga <Plug>(EasyAlign) Not work
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" nmap <leader>ga <Plug>(EasyAlign) Not work
 
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
 
@@ -263,31 +273,38 @@ require('telescope').setup{
   }}
 EOF
 
-
+" SadTree
+nnoremap <leader>t <cmd>CHADopen<cr>
+nnoremap <leader>l <cmd>call setqflist([])<cr>
 
 " Lua config git decorator https://github.com/lewis6991/gitsigns.nvim
 lua << EOF
-require('gitsigns').setup()
+require('gitsigns').setup {
+    current_line_blame = true,
+    }
 EOF
+
+set statusline+=%{get(b:,'gitsigns_status','')}
 
 lua << EOF
 	require("true-zen").setup {}
     require("auto-save").setup {}
-    require("nvim-tree").setup({
-      sort_by = "case_sensitive",
-      view = {
-        width = 30,
-        mappings = {
-          list = {
-            { key = "u", action = "dir_up" },
-          },
-        },
-      },
-      renderer = {
-        group_empty = true,
-      },
-      filters = {
-        dotfiles = true,
-      },
-    })
+    -- require("bufferline").setup {}
+    -- require("nvim-tree").setup({
+    --   sort_by = "case_sensitive",
+    --   view = {
+    --     width = 30,
+    --     mappings = {
+    --       list = {
+    --         { key = "u", action = "dir_up" },
+    --       },
+    --     },
+    --   },
+    --   renderer = {
+    --     group_empty = true,
+    --   },
+    --   filters = {
+    --     dotfiles = true,
+    --   },
+    -- })
 EOF
